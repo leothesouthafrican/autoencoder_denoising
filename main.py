@@ -31,16 +31,16 @@ os.makedirs(output_dir, exist_ok=True)
 # Set environment variables
 TRAIN_FUNCTION = train_denoising_model
 MODEL = Autoencoder1
-EPOCHS = 100
+EPOCHS = 150
 DEVICE = "mps"
 
 # Noise Parameters
 NOISE_PARAMS = {
-    "noise": 0.1,
+    "noise": 0.075,
     "warp": 0.9,
-    "speckle": 0.5,
-    "streak": 0.5,
-    "rotate": 0.15
+    "speckle": 0.7,
+    "streak": 0.6,
+    "rotate": 0.2
 }
 
 DATASET_PATH = "/Users/leo/Programming/autoencoder/data/TextImages/train_cleaned"
