@@ -1,12 +1,12 @@
-from tqdm import tqdm
+# training_functions.py
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from noise import apply_scanning_artifacts
 
-def train_denoising_model(model, data, noise_factor, optimizer, criterion, device):
-    # Add noise to the data
-    noisy_data = data + noise_factor * torch.randn_like(data)
-    noisy_data = torch.clamp(noisy_data, 0., 1.).to(device)
+def train_denoising_model(model, data, noise_params, optimizer, criterion, device):
+    # Add custom noise to the data
+    noisy_data = apply_scanning_artifacts(data, **noise_params).to(device)
     data = data.to(device)
 
     optimizer.zero_grad()
@@ -15,18 +15,17 @@ def train_denoising_model(model, data, noise_factor, optimizer, criterion, devic
     loss.backward()
     optimizer.step()
 
-    return loss
+    return loss.item()
 
-def validate_model(model, valid_loader, noise_factor=0.0, device="cpu"):
+def validate_model(model, valid_loader, noise_params, device="cpu"):
     model.to(device)
-    model.eval()  # set model to evaluation mode
+    model.eval()
     criterion = nn.MSELoss().to(device)
     total_loss = 0
 
-    with torch.no_grad():  # no gradients needed for validation
+    with torch.no_grad():
         for data, _ in valid_loader:
-            noisy_data = data + noise_factor * torch.randn_like(data)
-            noisy_data = torch.clamp(noisy_data, 0., 1.).to(device)
+            noisy_data = apply_scanning_artifacts(data, **noise_params).to(device)
             data = data.to(device)
 
             output = model(noisy_data)
@@ -34,6 +33,5 @@ def validate_model(model, valid_loader, noise_factor=0.0, device="cpu"):
             total_loss += loss.item()
 
     avg_loss = total_loss / len(valid_loader)
-    print(f"Validation Loss: {avg_loss:.4f}")
-    model.train()  # set model back to training mode
+    model.train()
     return avg_loss
