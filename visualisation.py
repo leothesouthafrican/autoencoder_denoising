@@ -1,12 +1,12 @@
 # visualization.py
-
 import matplotlib.pyplot as plt
 import torchvision.utils as vutils
 from noise import apply_scanning_artifacts
 import torch
+import os
 
-def display_training_results(train_losses, valid_losses, model, data_loader, noise_params, device):
-    # Display training and validation loss graph
+def display_training_results(train_losses, valid_losses, model, data_loader, noise_params, device, output_dir):
+    # Display and save training and validation loss graph
     plt.figure(figsize=(10, 5))
     plt.title("Training and Validation Loss")
     plt.plot(train_losses, label="Training Loss")
@@ -14,6 +14,8 @@ def display_training_results(train_losses, valid_losses, model, data_loader, noi
     plt.xlabel("Epochs")
     plt.ylabel("Loss")
     plt.legend()
+    loss_plot_path = os.path.join(output_dir, "training_validation_loss.png")
+    plt.savefig(loss_plot_path)
     plt.show()
 
     # Fetch one batch of data
@@ -33,7 +35,7 @@ def display_training_results(train_losses, valid_losses, model, data_loader, noi
     grid_noisy = vutils.make_grid(noisy_images, nrow=4, normalize=True, scale_each=True).cpu()
     grid_cleaned = vutils.make_grid(clean_images, nrow=4, normalize=True, scale_each=True).cpu()
 
-    # Display images
+    # Display and save images
     plt.figure(figsize=(24, 12))  # Adjust figure size as needed
     plt.subplot(3, 1, 1)
     plt.title("Original Images")
@@ -50,5 +52,8 @@ def display_training_results(train_losses, valid_losses, model, data_loader, noi
     plt.imshow(grid_cleaned.permute(1, 2, 0))
     plt.axis('off')
 
-    plt.tight_layout()
+    comparison_plot_path = os.path.join(output_dir, "comparative_images.png")
+    plt.savefig(comparison_plot_path)
     plt.show()
+
+# Add any additional functions or classes needed for visualization below this line
