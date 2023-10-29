@@ -5,32 +5,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class Autoencoder1(nn.Module):
-    def __init__(self, input_dim, latent_dim):
+    def __init__(self, **kwargs):
         super(Autoencoder1, self).__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(input_dim, 128),
-            nn.ReLU(),
-            nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Linear(64, latent_dim)
-        )
-        self.decoder = nn.Sequential(
-            nn.Linear(latent_dim, 64),
-            nn.ReLU(),
-            nn.Linear(64, 128),
-            nn.ReLU(),
-            nn.Linear(128, input_dim),
-            nn.Sigmoid()
-        )
-        
-    def forward(self, x):
-        x = self.encoder(x)
-        x = self.decoder(x)
-        return x
-
-class Autoencoder2(nn.Module):
-    def __init__(self, latent_dim, **kwargs):
-        super(Autoencoder2, self).__init__()
         
         # Encoder layers
         self.encoder = nn.Sequential(
