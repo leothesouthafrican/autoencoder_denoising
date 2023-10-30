@@ -1,0 +1,28 @@
+<html>
+<body>
+    <h2>Invoice #{{ invoice_number }}</h2>
+    <p><strong>Date:</strong> {{ date }}</p>
+    <p><strong>Due Date:</strong> {{ due_date }}</p>
+    <h3>Bill To:</h3>
+    <p>
+        {{ customer_name }}<br>
+        {{ customer_address }}
+    </p>
+    <h3>Items:</h3>
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.price }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p><strong>Total Due:</strong> ${{ total }}</p>
+</body>
+</html>
